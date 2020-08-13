@@ -1,4 +1,4 @@
-#include "positions.h"
+#include "Positions.h"
 
 
 Position::Position(float azimuth, float elevation)

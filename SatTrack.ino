@@ -1,9 +1,11 @@
 #include <avr/pgmspace.h>
 #include <LiquidCrystal.h>
-#include <satellites.h>
+#include <Satellites.h>
 #include <API.h>
-#include <positions.h>
+#include <Positions.h>
+#include <StepperMotor.h>
 
+// LCD pins
 #define d4 4
 #define d5 5
 #define d6 6
@@ -11,7 +13,10 @@
 #define rs 8
 #define bl 10
 #define en 12
+
+// Arduino embedded leb
 #define led_pin PB5
+
 
 const uint8_t t2_load = 0;
 const uint8_t t2_comp = 125;
@@ -95,14 +100,20 @@ ISR(TIMER2_COMPA_vect) {
 
 
 void setup() {
+  // Timer Setup
   DDRB |= (1 << led_pin);
-
   timerSetup();
 
+  // LCD Setup
   digitalWrite(bl, LOW);
   lcd.begin(16, 2);
   lcdPrintSatData(0);
 
+  // Stepper Setup
+  pinMode(step_pin, OUTPUT);
+  pinMode(dir_pin, OUTPUT);
+
+  // Serial Setup
   Serial.begin(115200);
 }
 
@@ -159,11 +170,11 @@ void loop() {
     Serial.print(nextAzimuth);
     Serial.print(" // Elevation : ");
     Serial.println(nextElevation);
+    stepperMoveTo(nextAzimuth);
   }
 
   if (doUpdateRequest) {
     doUpdateRequest = false;
     getNextPositions(updateNorad, 15, posList);
   }
-
 }

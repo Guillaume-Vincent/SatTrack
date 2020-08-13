@@ -1,5 +1,6 @@
 #include "API.h"
 
+
 void deserialize(char* json, PositionsList * posList) {
 	StaticJsonDocument<350> doc;
 
@@ -45,6 +46,8 @@ void getNextPositions(long norad, uint16_t nbPos, PositionsList * posList) {
 		case 45787:
 			deserialize(input3, posList);
 			break;
+		case 44427:
+			deserialize(input4, posList);
 		default:
 			break;
 	}

@@ -1,4 +1,4 @@
-#include "satellites.h"
+#include "Satellites.h"
 
 
 Satellite::Satellite(char* name, long norad)
