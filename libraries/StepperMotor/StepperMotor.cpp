@@ -1,6 +1,11 @@
 #include "StepperMotor.h"
 
 
+void stepperSetup() {
+	pinMode(step_pin, OUTPUT);
+	pinMode(dir_pin, OUTPUT);
+}
+
 void pulseStep(unsigned int period) {
 	digitalWrite(step_pin, HIGH);
 	delayMicroseconds(period);

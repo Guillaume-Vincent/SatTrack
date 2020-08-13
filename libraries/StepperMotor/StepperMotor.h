@@ -4,9 +4,10 @@
 #include "Arduino.h"
 
 
-const unsigned int step_pin = 11;
-const unsigned int dir_pin = 13;
+const uint8_t step_pin = 11;
+const uint8_t dir_pin = 13;
 
+void stepperSetup();
 
 void pulseStep(unsigned int period);
 

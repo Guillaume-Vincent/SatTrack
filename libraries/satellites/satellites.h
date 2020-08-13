@@ -15,9 +15,9 @@ private:
 };
 
 
-const int satNumber = 4;
+const int SAT_COUNT = 4;
 
-const Satellite satList[satNumber + 1] = {
+const Satellite satList[SAT_COUNT + 1] = {
 	Satellite("Space Station", 25544),
 	Satellite("NOAA 19", 33591),
 	Satellite("STARLINK-1517", 45787),
