@@ -1,43 +1,41 @@
 #include "StepperMotor.h"
 
 
-void stepperSetup() {
-	pinMode(step_pin, OUTPUT);
-	pinMode(dir_pin, OUTPUT);
+StepperMotor::StepperMotor(uint8_t step, uint8_t dir) {
+	currentAngle = 0.0;
+
+	pinMode(step, OUTPUT);
+	pinMode(dir, OUTPUT);
 }
 
-void pulseStep(unsigned int period) {
+void StepperMotor::pulseStep(uint16_t period) {
 	digitalWrite(step_pin, HIGH);
 	delayMicroseconds(period);
 	digitalWrite(step_pin, LOW);
 	delayMicroseconds(period);	
 }
 
-void oneStepCW() {
+void StepperMotor::oneStepCW() {
 	digitalWrite(dir_pin, LOW);
 	pulseStep(1000);
 }
 
-
-void oneStepCCW() {
+void StepperMotor::oneStepCCW() {
 	digitalWrite(dir_pin, HIGH);
 	pulseStep(1000);
 }
 
-
-void stepCW(unsigned int microstepNb) {
+void StepperMotor::stepCW(uint16_t microstepNb) {
 	for (int i=0; i<microstepNb; i++)
 		oneStepCW();
 }
 
-void stepCCW(unsigned int microstepNb) {
+void StepperMotor::stepCCW(uint16_t microstepNb) {
 	for (int i=0; i<microstepNb; i++)
 		oneStepCCW();
 }
 
-void stepperMoveTo(float angle) {
-	static float currentAngle = 0.0;
-
+void StepperMotor::moveTo(float angle) {
 	unsigned int microstepNb;
 
 	angle -= currentAngle;
@@ -48,14 +46,18 @@ void stepperMoveTo(float angle) {
 		angle -= 360.0;
 	}
 
-	microstepNb = 0.5 + 8 * abs(angle) / 1.8;
+	microstepNb = 0.5 + 8 * abs(angle) / (1.8 * gear_ratio);
 
 	if (angle > 0) {
-		stepCW(microstepNb);
-		currentAngle += microstepNb * 1.8 / 8.0;
+		stepCW(microstepNb * gear_ratio);
+		currentAngle += microstepNb * gear_ratio * 1.8 / 8.0;
+		if (currentAngle > 180.0)
+		    currentAngle -= 360.0;
 	}
 	else {
-		stepCCW(microstepNb);
-		currentAngle -= microstepNb * 1.8 / 8.0;
+		stepCCW(microstepNb / gear_ratio);
+		currentAngle -= microstepNb * gear_ratio * 1.8 / 8.0;
+		if (currentAngle < -180.0)
+		    currentAngle += 360.0;
 	}
 }

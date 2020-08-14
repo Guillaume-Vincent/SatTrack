@@ -18,6 +18,7 @@ const uint8_t d7 = 7;
 const uint8_t rs = 8;
 const uint8_t bl = 10;
 const uint8_t en = 12;
+const uint8_t btn_pin = A5;
 
 
 
@@ -27,7 +28,6 @@ public:
 	LiquidCrystalBoard(uint8_t rs, uint8_t enable,
 		uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3);
 	
-
 	// LCD related methods
 	void lcdSetup();
 	void lcdBacklightOn();
@@ -47,7 +47,6 @@ private:
 	uint16_t lcdPageSelected;
 	enum button buttonPressed;
 };
-
 
 // Template method direct implementation
 template <class dataType>

@@ -7,7 +7,7 @@
 
 // Arduino embedded leb
 #define led_pin PB5
-
+#define RST_PIN 4
 
 const uint8_t t2_load = 0;
 const uint8_t t2_comp = 125;
@@ -17,10 +17,9 @@ volatile bool doUpdateRequest = false;
 volatile float nextAzimuth;
 volatile float nextElevation;
 
-uint16_t updateNorad;
-
 PositionsList * posList = new PositionsList();
-LiquidCrystalBoard lcb(rs, en, d4, d5, d6, d7);
+LiquidCrystalBoard lcb(rs, en, A0, A1, A2, A3);
+StepperMotor stepper(step_pin, dir_pin);
 
 
 void timerSetup() {
@@ -48,6 +47,7 @@ ISR(TIMER2_COMPA_vect) {
   TCNT2 = t2_load;
 
   if (counter++ == 125) {
+    Serial.println(digitalRead(RST_PIN));
     if (!posList->isEmpty()) {
       doGotoPosition = true;
 
@@ -68,15 +68,14 @@ ISR(TIMER2_COMPA_vect) {
 
 
 void setup() {
+  pinMode(RST_PIN, INPUT_PULLUP);
+  
   // Timer Setup
   DDRB |= (1 << led_pin);
   timerSetup();
 
   // LCB Setup
   lcb.lcdSetup();
-
-  // Stepper Setup
-  stepperSetup();
 
   // Serial Setup
   Serial.begin(115200);
@@ -91,7 +90,7 @@ void loop() {
     Serial.print(nextAzimuth);
     Serial.print(" // Elevation : ");
     Serial.println(nextElevation);
-    // stepperMoveTo(nextAzimuth);
+    stepper.moveTo(nextAzimuth);
   }
 
   if (doUpdateRequest) {

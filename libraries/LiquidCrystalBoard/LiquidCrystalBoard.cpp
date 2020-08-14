@@ -41,7 +41,7 @@ uint16_t LiquidCrystalBoard::getLcdPageSelected() {
 
 // Buttons related methods
 void LiquidCrystalBoard::checkButtons() {
-	int btnVal = analogRead(A0);
+	int btnVal = analogRead(btn_pin);
 
 	if (buttonPressed == NONE) {
 		if (btnVal < 50)       buttonPressed = RIGHT;
@@ -94,4 +94,4 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 		default:
 			break;
 	}
-} 
+}
