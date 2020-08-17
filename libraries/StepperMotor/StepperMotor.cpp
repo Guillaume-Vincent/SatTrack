@@ -17,12 +17,12 @@ void StepperMotor::pulseStep(uint16_t period) {
 
 void StepperMotor::oneStepCW() {
 	digitalWrite(dir_pin, LOW);
-	pulseStep(1000);
+	pulseStep(250);
 }
 
 void StepperMotor::oneStepCCW() {
 	digitalWrite(dir_pin, HIGH);
-	pulseStep(1000);
+	pulseStep(250);
 }
 
 void StepperMotor::stepCW(uint16_t microstepNb) {
@@ -47,15 +47,15 @@ void StepperMotor::moveTo(float angle) {
 	}
 
 	microstepNb = 0.5 + 8 * abs(angle) / (1.8 * gear_ratio);
-
+	Serial.println(microstepNb);
 	if (angle > 0) {
-		stepCW(microstepNb * gear_ratio);
+		stepCW(microstepNb);
 		currentAngle += microstepNb * gear_ratio * 1.8 / 8.0;
 		if (currentAngle > 180.0)
 		    currentAngle -= 360.0;
 	}
 	else {
-		stepCCW(microstepNb / gear_ratio);
+		stepCCW(microstepNb);
 		currentAngle -= microstepNb * gear_ratio * 1.8 / 8.0;
 		if (currentAngle < -180.0)
 		    currentAngle += 360.0;

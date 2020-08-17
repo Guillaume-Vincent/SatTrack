@@ -10,6 +10,7 @@ LiquidCrystalBoard::LiquidCrystalBoard(uint8_t rs,  uint8_t enable,
 // LCD related methods
 void LiquidCrystalBoard::lcdSetup() {
 	digitalWrite(bl, LOW);
+	pinMode(stop_pin, INPUT_PULLUP);
 	LiquidCrystal::begin(16, 2);
 	LiquidCrystal::clear();
 	lcdPrintSatData(0);
@@ -42,17 +43,23 @@ uint16_t LiquidCrystalBoard::getLcdPageSelected() {
 // Buttons related methods
 void LiquidCrystalBoard::checkButtons() {
 	int btnVal = analogRead(btn_pin);
+	int stopVal = digitalRead(stop_pin);
 
-	if (buttonPressed == NONE) {
+	
+
+	if (!stopVal) {
+		buttonPressed = STOP;
+		buttonFunction(buttonPressed);
+	}
+	else if (buttonPressed == NONE) {
 		if (btnVal < 50)       buttonPressed = RIGHT;
 		else if (btnVal < 175) buttonPressed = UP;
 		else if (btnVal < 290) buttonPressed = DOWN;
 		else if (btnVal < 480) buttonPressed = LEFT;
 		else if (btnVal < 800) buttonPressed = SELECT;
-
 		buttonFunction(buttonPressed);
 	}
-	else if (btnVal > 1000) {
+	else if (btnVal > 1000 && stopVal) {
 		buttonPressed = NONE;
 	}
 }
@@ -72,13 +79,13 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 			break;
 
 		case RIGHT:
-			if (++lcdPageNb >= SAT_COUNT + 1)
+			if (++lcdPageNb >= SAT_COUNT )
 				lcdPageNb = 0;
 			lcdPrintSatData(lcdPageNb);
 			break;
 
 		case LEFT:
-			if (--lcdPageNb >= SAT_COUNT + 1)
+			if (--lcdPageNb >= SAT_COUNT)
 				lcdPageNb = SAT_COUNT;
 			lcdPrintSatData(lcdPageNb);
 			break;
@@ -89,6 +96,10 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 			posList->clearList();
 			if ((updateNorad = satList[lcdPageSelected].getNorad()) != 0)
 				getNextPositions(updateNorad, 15, posList);
+			break;
+
+		case STOP:
+			posList->clearList();
 			break;
 
 		default:

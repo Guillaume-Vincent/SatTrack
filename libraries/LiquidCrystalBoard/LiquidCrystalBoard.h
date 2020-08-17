@@ -18,8 +18,8 @@ const uint8_t d7 = 7;
 const uint8_t rs = 8;
 const uint8_t bl = 10;
 const uint8_t en = 12;
+const uint8_t stop_pin = 4;
 const uint8_t btn_pin = A5;
-
 
 
 class LiquidCrystalBoard : public LiquidCrystal{
@@ -38,7 +38,7 @@ public:
 	uint16_t getLcdPageSelected();
 
 	// Buttons related methods
-	enum button {UP, DOWN, RIGHT, LEFT, SELECT, NONE};
+	enum button {UP, DOWN, RIGHT, LEFT, SELECT, STOP, NONE};
 	void checkButtons();
 	void buttonFunction(enum button button);
 

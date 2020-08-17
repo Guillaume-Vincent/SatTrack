@@ -17,13 +17,11 @@ private:
 
 const int SAT_COUNT = 4;
 
-const Satellite satList[SAT_COUNT + 1] = {
+const Satellite satList[SAT_COUNT] = {
 	Satellite("Space Station", 25544),
 	Satellite("NOAA 19", 33591),
 	Satellite("STARLINK-1517", 45787),
 	Satellite("KRAKSAT", 44427),
-
-	Satellite("STOP", 0)
 };
 
 

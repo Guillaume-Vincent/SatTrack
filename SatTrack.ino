@@ -7,7 +7,6 @@
 
 // Arduino embedded leb
 #define led_pin PB5
-#define RST_PIN 4
 
 const uint8_t t2_load = 0;
 const uint8_t t2_comp = 125;
@@ -47,7 +46,6 @@ ISR(TIMER2_COMPA_vect) {
   TCNT2 = t2_load;
 
   if (counter++ == 125) {
-    Serial.println(digitalRead(RST_PIN));
     if (!posList->isEmpty()) {
       doGotoPosition = true;
 
@@ -66,10 +64,7 @@ ISR(TIMER2_COMPA_vect) {
   }
 }
 
-
 void setup() {
-  pinMode(RST_PIN, INPUT_PULLUP);
-  
   // Timer Setup
   DDRB |= (1 << led_pin);
   timerSetup();
