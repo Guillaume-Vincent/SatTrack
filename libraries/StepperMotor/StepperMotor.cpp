@@ -26,12 +26,12 @@ void StepperMotor::oneStepCCW() {
 }
 
 void StepperMotor::stepCW(uint16_t microstepNb) {
-	for (int i=0; i<microstepNb; i++)
+	for (uint16_t i=0; i<microstepNb; i++)
 		oneStepCW();
 }
 
 void StepperMotor::stepCCW(uint16_t microstepNb) {
-	for (int i=0; i<microstepNb; i++)
+	for (uint16_t i=0; i<microstepNb; i++)
 		oneStepCCW();
 }
 

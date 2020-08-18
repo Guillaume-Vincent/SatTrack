@@ -45,6 +45,9 @@ Position * PositionsList::getNext() {
 
 		return pos;
 	}
+	else {
+		return NULL;
+	}
 }
 
 int PositionsList::getNbPositions() {

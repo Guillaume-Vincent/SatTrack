@@ -1,7 +1,7 @@
 #include "API.h"
 
 
-void deserialize(char* json, PositionsList * posList) {
+void deserialize(const char* json, PositionsList * posList) {
 	StaticJsonDocument<350> doc;
 
 	DeserializationError error = deserializeJson(doc, (const __FlashStringHelper*)json);
@@ -21,10 +21,7 @@ void deserialize(char* json, PositionsList * posList) {
     Serial.print(satid);
     Serial.println(")");
 
-	float azimuth;
-	float elevation;
-
-    for (int i=1; i<nbpos; i++){
+    for (uint16_t i=1; i<nbpos; i++){
     	posList->addPosition(doc["A"][i], doc["E"][i]);
     }
 }
