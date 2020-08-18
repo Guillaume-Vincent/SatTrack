@@ -47,7 +47,6 @@ void StepperMotor::moveTo(float angle) {
 	}
 
 	microstepNb = 0.5 + 8 * abs(angle) / (1.8 * gear_ratio);
-	Serial.println(microstepNb);
 	if (angle > 0) {
 		stepCW(microstepNb);
 		currentAngle += microstepNb * gear_ratio * 1.8 / 8.0;

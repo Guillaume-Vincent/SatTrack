@@ -22,7 +22,7 @@ const uint8_t stop_pin = 4;
 const uint8_t btn_pin = A5;
 
 
-class LiquidCrystalBoard : public LiquidCrystal{
+class LiquidCrystalBoard : public LiquidCrystal {
 public:
 	// Constructor
 	LiquidCrystalBoard(uint8_t rs, uint8_t enable,
@@ -35,6 +35,7 @@ public:
 	void lcdClearLine(uint8_t line);
 	template <class dataType> void lcdPrintLine(uint8_t line, dataType data);
 	void lcdPrintSatData(uint8_t satNumber);
+	void lcdPrintPosData(float azimuth, float elevation);
 	uint16_t getLcdPageSelected();
 
 	// Buttons related methods

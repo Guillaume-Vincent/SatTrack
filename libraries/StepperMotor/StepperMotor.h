@@ -3,14 +3,13 @@
 
 #include "Arduino.h"
 
-const float gear_ratio = 12.22 / 87.98;
 
+const float gear_ratio = 12.22 / 87.98;
 const uint8_t step_pin = 11;
 const uint8_t dir_pin = 13;
 
 
-class StepperMotor
-{
+class StepperMotor {
 public:
 	StepperMotor(uint8_t step, uint8_t dir);
 

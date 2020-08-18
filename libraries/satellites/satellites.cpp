@@ -1,13 +1,13 @@
 #include "Satellites.h"
 
 
-Satellite::Satellite(char* name, long norad)
+Satellite::Satellite(const char* name, long norad)
 : name(name), norad(norad) {}
 
-char* Satellite::getName() {
+const char* Satellite::getName() const {
 	return name;
 }
 
-long Satellite::getNorad() {
+long Satellite::getNorad() const {
 	return norad;
 }

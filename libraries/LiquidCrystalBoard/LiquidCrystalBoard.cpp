@@ -35,6 +35,11 @@ void LiquidCrystalBoard::lcdPrintSatData(uint8_t satNumber) {
 	lcdPrintLine(1, satList[satNumber].getNorad());
 }
 
+void LiquidCrystalBoard::lcdPrintPosData(float azimuth, float elevation) {
+	lcdPrintLine(0, String("A:") + String(azimuth));
+    lcdPrintLine(1, String("E:") + String(elevation));
+}
+
 uint16_t LiquidCrystalBoard::getLcdPageSelected() {
 	return lcdPageSelected;
 }
@@ -44,8 +49,6 @@ uint16_t LiquidCrystalBoard::getLcdPageSelected() {
 void LiquidCrystalBoard::checkButtons() {
 	int btnVal = analogRead(btn_pin);
 	int stopVal = digitalRead(stop_pin);
-
-	
 
 	if (!stopVal) {
 		buttonPressed = STOP;
@@ -86,7 +89,7 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 
 		case LEFT:
 			if (--lcdPageNb >= SAT_COUNT)
-				lcdPageNb = SAT_COUNT;
+				lcdPageNb = SAT_COUNT - 1;
 			lcdPrintSatData(lcdPageNb);
 			break;
 
@@ -100,6 +103,7 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 
 		case STOP:
 			posList->clearList();
+			lcdPrintSatData(lcdPageNb);
 			break;
 
 		default:

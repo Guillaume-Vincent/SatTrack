@@ -4,19 +4,18 @@
 
 class Satellite {
 public:
-	Satellite(char* name, long norad);
+	Satellite(const char* name, long norad);
 
-	char* getName();
-	long getNorad();
+	const char* getName() const;
+	long getNorad() const;
 
 private:
-	char* name;
+	const char* name;
 	long norad;
 };
 
 
 const int SAT_COUNT = 4;
-
 const Satellite satList[SAT_COUNT] = {
 	Satellite("Space Station", 25544),
 	Satellite("NOAA 19", 33591),
