@@ -8,21 +8,21 @@ StepperMotor::StepperMotor(uint8_t step, uint8_t dir) {
 	pinMode(dir, OUTPUT);
 }
 
-void StepperMotor::pulseStep(uint16_t period) {
+void StepperMotor::pulseStep() {
 	digitalWrite(step_pin, HIGH);
-	delayMicroseconds(period);
+	delayMicroseconds(pulse_delay);
 	digitalWrite(step_pin, LOW);
-	delayMicroseconds(period);	
+	delayMicroseconds(pulse_delay);	
 }
 
 void StepperMotor::oneStepCW() {
 	digitalWrite(dir_pin, LOW);
-	pulseStep(250);
+	pulseStep();
 }
 
 void StepperMotor::oneStepCCW() {
 	digitalWrite(dir_pin, HIGH);
-	pulseStep(250);
+	pulseStep();
 }
 
 void StepperMotor::stepCW(uint16_t microstepNb) {

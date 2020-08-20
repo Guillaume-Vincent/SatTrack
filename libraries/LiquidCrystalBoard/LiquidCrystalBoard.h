@@ -10,14 +10,14 @@
 
 extern PositionsList * posList;
 
-
+/*
 const uint8_t d4 = 4;
 const uint8_t d5 = 5;
 const uint8_t d6 = 6;
-const uint8_t d7 = 7;
-const uint8_t rs = 8;
-const uint8_t bl = 10;
-const uint8_t en = 12;
+const uint8_t d7 = 7;*/
+const uint8_t rs_pin = 8;
+const uint8_t bl_pin = 10;
+const uint8_t en_pin = 12;
 const uint8_t stop_pin = 4;
 const uint8_t btn_pin = A5;
 

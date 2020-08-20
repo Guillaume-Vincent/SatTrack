@@ -9,7 +9,7 @@ LiquidCrystalBoard::LiquidCrystalBoard(uint8_t rs,  uint8_t enable,
 
 // LCD related methods
 void LiquidCrystalBoard::lcdSetup() {
-	digitalWrite(bl, LOW);
+	digitalWrite(bl_pin, LOW);
 	pinMode(stop_pin, INPUT_PULLUP);
 	LiquidCrystal::begin(16, 2);
 	LiquidCrystal::clear();
@@ -17,11 +17,11 @@ void LiquidCrystalBoard::lcdSetup() {
 }
 
 void LiquidCrystalBoard::lcdBacklightOn() {
-	pinMode(bl, INPUT);
+	pinMode(bl_pin, INPUT);
 }
 
 void LiquidCrystalBoard::lcdBacklightOff() {
-	pinMode(bl, OUTPUT);
+	pinMode(bl_pin, OUTPUT);
 }
 
 void LiquidCrystalBoard::lcdClearLine(uint8_t line) {
