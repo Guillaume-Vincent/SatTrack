@@ -11,6 +11,8 @@ ServoMotor::ServoMotor()
 
 void ServoMotor::init(uint8_t servo_pin) {
 	Servo::attach(servo_pin, minPosPeriod, maxPosPeriod);
+	if (Servo::attached())
+		Serial.println("attached");
 	moveTo(45.0);
 }
 
