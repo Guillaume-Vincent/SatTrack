@@ -50,7 +50,7 @@ void LiquidCrystalBoard::checkButtons() {
 	int btnVal = analogRead(btn_pin);
 	int stopVal = digitalRead(stop_pin);
 
-	if (!stopVal) {
+	if (!stopVal and buttonPressed != STOP) {
 		buttonPressed = STOP;
 		buttonFunction(buttonPressed);
 	}
