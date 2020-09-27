@@ -4,75 +4,101 @@
 ESPWifi::ESPWifi(uint8_t rx, uint8_t tx)
 : SoftwareSerial(rx, tx) {}
 
-int ESPWifi::reset() {
-	unsigned long t0;
+void ESPWifi::init() {
+	Serial.print(ESP_INIT);
+	if (reset() && joinAccessPoint()) Serial.println(ESP_DONE);
+	else Serial.println(ESP_FAILED);
+}
+
+bool ESPWifi::reset() {
+	String data = "";
 	SoftwareSerial::println("AT+RST");
 	
-	t0 = millis();
-	while (data != ready_str && millis() < t0 + 2000) {
+	unsigned long t0 = millis();
+	while (data != ready_str && millis() < t0 + 1000) {
     	while (SoftwareSerial::available()) {
     		data = SoftwareSerial::readStringUntil('\n');
   		}
   	}
-  	if (data == ready_str) {
-  		Serial.println("RESET DONE !");
-  		return 0;
-  	}
-  	else {
-  		Serial.println("Timeout");
-  		return -1;
-  	}
+  	return data == ready_str;
 }
- 
-int ESPWifi::joinAccessPoint(String ssid, String pass) {
-	unsigned long t0;
-	String cwjap_command = String("AT+CWJAP=\"") + ssid + "\",\"" + pass + "\"";
-	SoftwareSerial::println(cwjap_command);
 
-	t0 = millis();
-	while (data != ok_str && millis() < t0 + 2000) {
+bool ESPWifi::joinAccessPoint() {
+	bool connected = false;
+	bool gotip = false;
+	String data = "";
+
+	char cwjapCommand[41];
+	sprintf(cwjapCommand, "AT+CWJAP=\"%s\",\"%s\"", hotspot_ssid, hotspot_pass);
+	SoftwareSerial::println(cwjapCommand);
+
+	unsigned long t0 = millis();
+	while (data != ok_str && millis() < t0 + 10000) {
     	while (SoftwareSerial::available()) {
 			data = SoftwareSerial::readStringUntil('\n');
-    		if (data == "WIFI CONNECTED\r" || data == "WIFI GOT IP\r")
-    			Serial.println(data);
-    	}
+    		if (data == connected_str) connected = true;
+    		if (data == gotip_str) gotip = true;
+  		}
   	}
-  	return 0;
+  	return data == ok_str && connected && gotip;
 }
 
-int ESPWifi::getLocalIP() {
-	unsigned long t0;
-	SoftwareSerial::println("AT+CIFSR");
-	
-	t0 = millis();
-	while (millis() < t0 + 2000) {
-		while (SoftwareSerial::available()) {
-			data = SoftwareSerial::readStringUntil('"');
-			if (data.startsWith("192.168.")) {
-				Serial.println(data);
-				return 0;
-			}
-		}
-	}
-	Serial.println("ESPWifi::getLocalIP() : Timeout");
-	return -1;
-}
+bool ESPWifi::establishConnection() {
+	Serial.print(ESP_CONN);
+	bool connected = false;
+	String data = "";
 
-int ESPWifi::establishConnection(String remoteIP, uint16_t remotePort) {
-	unsigned long t0;
-	String cipstart = "AT+CIPSTART=\"TCP\",\"" + remoteIP + "\"," + String(remotePort);
-	SoftwareSerial::println(cipstart);
-	
-	t0 = millis();
-	while (data != ok_str && millis() < t0 + 2000) {
+	char cipstartCommand[38];
+	sprintf(cipstartCommand, "AT+CIPSTART=\"TCP\",\"%s\",%s", remote_ip, remote_port);
+	SoftwareSerial::println(cipstartCommand);
+
+	unsigned long t0 = millis();
+	while (data != ok_str && millis() < t0 + 1000) {
 		while (SoftwareSerial::available()) {
 			data = SoftwareSerial::readStringUntil('\n');
-			if (data == "CONNECT\r") {
-				Serial.println("Connected to 192.168.43.1:5000");
-				return 0;
-			}
+			if (data == connect_str) connected = true;
 		}
 	}
-	Serial.println("ESPWifi::establishConnection() : Timeout");
-	return -1;
+	if (data == ok_str && connected) {
+		Serial.println(ESP_DONE);
+		return true;
+	}
+	else {
+		Serial.println(ESP_FAILED);
+		return false;
+	}
+}
+
+void ESPWifi::makeAPIRequest(long norad) {
+	int j = 0;
+	int k = 0;
+	char databyte;
+	bool jsonFound = false;
+	String data = "";
+
+	char getCommand[51];
+	char hostCommad[22];
+	char cipsendCommand[14];
+	sprintf(getCommand, "GET /satpos/%ld/%s/%s/%d/%d/ HTTP/1.1", norad, OBS_LAT, OBS_LONG, OBS_ALT, NB_OF_POSITIONS);
+	sprintf(hostCommad, "Host: %s\r\n", remote_ip);
+	sprintf(cipsendCommand, "AT+CIPSEND=%d", getLength(getCommand) + getLength(hostCommad) + 4);
+	
+	SoftwareSerial::println(cipsendCommand);
+	delay(50);
+	SoftwareSerial::println(getCommand);
+	SoftwareSerial::println(hostCommad);
+	unsigned long t0 = millis();
+	
+	while (!jsonFound && millis() < t0 + 10000) {	
+		while (SoftwareSerial::available() && j++ < 15) {
+			data = SoftwareSerial::readStringUntil('\n');
+		}
+		while (SoftwareSerial::available() && j >= 15 && !jsonFound) {
+			databyte = SoftwareSerial::read();
+			jsonData[k] = databyte;
+			jsonFound = (databyte == '}');
+			k++;
+		}
+	}
+	deserialize(jsonData);
 }

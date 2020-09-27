@@ -46,24 +46,38 @@ uint16_t LiquidCrystalBoard::getLcdPageSelected() {
 
 
 // Buttons related methods
-void LiquidCrystalBoard::checkButtons() {
-	int btnVal = analogRead(btn_pin);
-	int stopVal = digitalRead(stop_pin);
+void LiquidCrystalBoard::lockButtons() {
+	buttonsLocked = true;
+}
 
-	if (!stopVal and buttonPressed != STOP) {
-		buttonPressed = STOP;
-		buttonFunction(buttonPressed);
-	}
-	else if (buttonPressed == NONE) {
-		if (btnVal < 50)       buttonPressed = RIGHT;
-		else if (btnVal < 175) buttonPressed = UP;
-		else if (btnVal < 290) buttonPressed = DOWN;
-		else if (btnVal < 480) buttonPressed = LEFT;
-		else if (btnVal < 800) buttonPressed = SELECT;
-		buttonFunction(buttonPressed);
-	}
-	else if (btnVal > 1000 && stopVal) {
-		buttonPressed = NONE;
+void LiquidCrystalBoard::unlockButtons() {
+	buttonsLocked = false;
+}
+
+void LiquidCrystalBoard::toggleButtonsLock() {
+	buttonsLocked = !buttonsLocked;
+}
+
+void LiquidCrystalBoard::checkButtons() {
+	if (!buttonsLocked) {
+		int btnVal = analogRead(btn_pin);
+		int stopVal = digitalRead(stop_pin);
+
+		if (!stopVal and buttonPressed != STOP) {
+			buttonPressed = STOP;
+			buttonFunction(buttonPressed);
+		}
+		else if (buttonPressed == NONE) {
+			if (btnVal < 50)       buttonPressed = RIGHT;
+			else if (btnVal < 175) buttonPressed = UP;
+			else if (btnVal < 290) buttonPressed = DOWN;
+			else if (btnVal < 480) buttonPressed = LEFT;
+			else if (btnVal < 800) buttonPressed = SELECT;
+			buttonFunction(buttonPressed);
+		}
+		else if (btnVal > 1000 && stopVal) {
+			buttonPressed = NONE;
+		}
 	}
 }
 
@@ -98,7 +112,9 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 
 			posList->clearList();
 			if ((updateNorad = satList[lcdPageSelected].getNorad()) != 0)
-				getNextPositions(updateNorad, 15, posList);
+				//getNextPositions(updateNorad, 15, posList);
+				if (ESP8266.establishConnection())
+					ESP8266.makeAPIRequest(updateNorad);
 			break;
 
 		case STOP:

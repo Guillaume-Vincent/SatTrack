@@ -8,6 +8,16 @@ StepperMotor::StepperMotor(uint8_t step, uint8_t dir) {
 	pinMode(dir, OUTPUT);
 }
 
+void StepperMotor::test() {
+	Serial.println("Testing Stepper Motor...");
+	delay(1000);
+	stepCW(8000);
+	delay(1000);
+	stepCCW(8000);
+	delay(1000);
+	Serial.println("Test finished");
+}
+
 void StepperMotor::pulseStep() {
 	digitalWrite(step_pin, HIGH);
 	delayMicroseconds(pulse_delay);
@@ -16,22 +26,22 @@ void StepperMotor::pulseStep() {
 }
 
 void StepperMotor::oneStepCW() {
-	digitalWrite(dir_pin, LOW);
-	pulseStep();
-}
-
-void StepperMotor::oneStepCCW() {
 	digitalWrite(dir_pin, HIGH);
 	pulseStep();
 }
 
+void StepperMotor::oneStepCCW() {
+	digitalWrite(dir_pin, LOW);
+	pulseStep();
+}
+
 void StepperMotor::stepCW(uint16_t microstepNb) {
-	for (int i=0; i<microstepNb; i++)
+	for (uint16_t i=0; i<microstepNb; i++)
 		oneStepCW();
 }
 
 void StepperMotor::stepCCW(uint16_t microstepNb) {
-	for (int i=0; i<microstepNb; i++)
+	for (uint16_t i=0; i<microstepNb; i++)
 		oneStepCCW();
 }
 

@@ -3,18 +3,15 @@
 
 #include "Arduino.h"
 #include "API.h"
+#include "ESPWifi.h"
+#include <LiquidCrystal.h>
 #include "Positions.h"
 #include "Satellites.h"
-#include <LiquidCrystal.h>
 
 
 extern PositionsList * posList;
+extern ESPWifi ESP8266;
 
-/*
-const uint8_t d4 = 4;
-const uint8_t d5 = 5;
-const uint8_t d6 = 6;
-const uint8_t d7 = 7;*/
 const uint8_t rs_pin = 8;
 const uint8_t bl_pin = 10;
 const uint8_t en_pin = 12;
@@ -40,6 +37,9 @@ public:
 
 	// Buttons related methods
 	enum button {UP, DOWN, RIGHT, LEFT, SELECT, STOP, NONE};
+	void lockButtons();
+	void unlockButtons();
+	void toggleButtonsLock();
 	void checkButtons();
 	void buttonFunction(enum button button);
 
@@ -47,6 +47,7 @@ private:
 	uint16_t lcdPageNb;
 	uint16_t lcdPageSelected;
 	enum button buttonPressed;
+	bool buttonsLocked;
 };
 
 // Template method direct implementation
