@@ -5,14 +5,15 @@ ESPWifi::ESPWifi(uint8_t rx, uint8_t tx)
 : SoftwareSerial(rx, tx) {}
 
 void ESPWifi::init() {
-	Serial.print(ESP_INIT);
-	if (reset() && joinAccessPoint()) Serial.println(ESP_DONE);
-	else Serial.println(ESP_FAILED);
+	lcb.lcdPrintESPTest();
+	if (reset() && joinAccessPoint()) lcb.lcdPrintESPSuccess();
+	else lcb.lcdPrintESPFailed();
+	delay(2000);
 }
 
 bool ESPWifi::reset() {
 	String data = "";
-	SoftwareSerial::println("AT+RST");
+	SoftwareSerial::println(AT_RST);
 	
 	unsigned long t0 = millis();
 	while (data != ready_str && millis() < t0 + 1000) {
@@ -29,7 +30,7 @@ bool ESPWifi::joinAccessPoint() {
 	String data = "";
 
 	char cwjapCommand[41];
-	sprintf(cwjapCommand, "AT+CWJAP=\"%s\",\"%s\"", hotspot_ssid, hotspot_pass);
+	sprintf(cwjapCommand, "AT+CWJAP=\"%s\",\"%s\"", HOTSPOT_SSID, HOTSPOT_PASS);
 	SoftwareSerial::println(cwjapCommand);
 
 	unsigned long t0 = millis();
@@ -49,7 +50,7 @@ bool ESPWifi::establishConnection() {
 	String data = "";
 
 	char cipstartCommand[38];
-	sprintf(cipstartCommand, "AT+CIPSTART=\"TCP\",\"%s\",%s", remote_ip, remote_port);
+	sprintf(cipstartCommand, "AT+CIPSTART=\"TCP\",\"%s\",%s", REMOTE_IP, REMOTE_PORT);
 	SoftwareSerial::println(cipstartCommand);
 
 	unsigned long t0 = millis();
@@ -69,7 +70,8 @@ bool ESPWifi::establishConnection() {
 	}
 }
 
-void ESPWifi::makeAPIRequest(long norad) {
+void ESPWifi::makeAPIRequest(long norad, enum LiquidCrystalBoard::menu type) {
+	if (type) {};
 	int j = 0;
 	int k = 0;
 	char databyte;
@@ -79,8 +81,8 @@ void ESPWifi::makeAPIRequest(long norad) {
 	char getCommand[51];
 	char hostCommad[22];
 	char cipsendCommand[14];
-	sprintf(getCommand, "GET /satpos/%ld/%s/%s/%d/%d/ HTTP/1.1", norad, OBS_LAT, OBS_LONG, OBS_ALT, NB_OF_POSITIONS);
-	sprintf(hostCommad, "Host: %s\r\n", remote_ip);
+	sprintf(getCommand, "GET /satpos/%ld/%s/%s/%s/%d/ HTTP/1.1", norad, OBS_LAT, OBS_LONG, OBS_ALT, NB_OF_POSITIONS);
+	sprintf(hostCommad, "Host: %s\r\n", REMOTE_IP);
 	sprintf(cipsendCommand, "AT+CIPSEND=%d", getLength(getCommand) + getLength(hostCommad) + 4);
 	
 	SoftwareSerial::println(cipsendCommand);

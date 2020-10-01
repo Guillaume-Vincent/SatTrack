@@ -12,13 +12,14 @@ volatile bool doGotoPosition = false;
 volatile bool doUpdateRequest = false;
 volatile float nextAzimuth;
 volatile float nextElevation;
+bool doMakeAPIRequest = false;
 char jsonData[JSON_MAX_SIZE];
+const Target * currentTargetList = NULL;
 
 PositionsList * posList = new PositionsList();
 LiquidCrystalBoard lcb(rs_pin, en_pin, A3, A2, A1, A0);
 StepperMotor stepper(step_pin, dir_pin);
 ServoMotor servo;
-
 ESPWifi ESP8266(2, 3);
 
 
@@ -26,27 +27,24 @@ void setup() {
   Serial.begin(9600);
   ESP8266.begin(9600);
   
+  lcb.init();
   timerSetup();
 
-  // lcb.lcdSetup();
-
   ESP8266.init();
+  servo.init();
+  stepper.init();
 
-  // servo.init(servo_pin);
-
-  // stepper.test();
+  lcb.start();
 }
 
 void loop() {
-  unsigned long t0 = millis();
-  if (ESP8266.establishConnection()) {
-    ESP8266.makeAPIRequest(25544);
-    Serial.println(millis() - t0);
-  }
-  Serial.println("Done");
-  /*
-  
   lcb.checkButtons();
+
+  if (doMakeAPIRequest) {
+    doMakeAPIRequest = false;
+    if (ESP8266.establishConnection())
+      ESP8266.makeAPIRequest(currentTargetList[lcb.getLcdPageSelected()].getID(), lcb.getSelectedMenu());
+  }
 
   if (doGotoPosition) {
     doGotoPosition = false;
@@ -71,7 +69,7 @@ void loop() {
 
   if (doUpdateRequest) {
     doUpdateRequest = false;
-    getNextPositions(satList[lcb.getLcdPageSelected()].getNorad(), 15, posList);
+    if (ESP8266.establishConnection())
+      ESP8266.makeAPIRequest(currentTargetList[lcb.getLcdPageSelected()].getID(), lcb.getSelectedMenu());
   }
-  */
 }

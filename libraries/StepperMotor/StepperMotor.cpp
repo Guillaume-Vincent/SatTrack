@@ -8,14 +8,17 @@ StepperMotor::StepperMotor(uint8_t step, uint8_t dir) {
 	pinMode(dir, OUTPUT);
 }
 
-void StepperMotor::test() {
-	Serial.println("Testing Stepper Motor...");
+void StepperMotor::init() {
+	lcb.lcdPrintStepperInit();
+
 	delay(1000);
 	stepCW(8000);
 	delay(1000);
 	stepCCW(8000);
 	delay(1000);
-	Serial.println("Test finished");
+	
+	lcb.lcdPrintStepperDone();
+	delay(2000);
 }
 
 void StepperMotor::pulseStep() {

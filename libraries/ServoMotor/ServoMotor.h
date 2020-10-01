@@ -3,19 +3,21 @@
 
 #include <Servo.h>
 #include "Arduino.h"
+#include "LiquidCrystalBoard.h"
+#include "Tools.h"
 
+
+extern LiquidCrystalBoard lcb;
 
 const uint8_t servo_pin = 9;
 const uint16_t minPosPeriod = 610;
 const uint16_t maxPosPeriod = 2310;
 
 
-uint16_t angleToPeriod(float angle);
-
 class ServoMotor : public Servo {
 public:
 	ServoMotor();
-	void init(uint8_t servo_pin);
+	void init();
 	void moveTo(float angle);
 };
 

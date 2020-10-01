@@ -2,7 +2,10 @@
 #define STEPPERMOTOR_H
 
 #include "Arduino.h"
+#include "LiquidCrystalBoard.h"
 
+
+extern LiquidCrystalBoard lcb;
 
 const float gear_ratio = 12.22 / 87.98;
 const uint8_t dir_pin = 11;
@@ -14,7 +17,7 @@ class StepperMotor {
 public:
 	StepperMotor(uint8_t step, uint8_t dir);
 
-	void test();
+	void init();
 	void pulseStep();
 	void oneStepCW();
 	void oneStepCCW();

@@ -2,19 +2,16 @@
 
 
 void deserialize(char* datastr) {
-	int i, j;
+	int i;
+	int j = 0;
 	char strBuffer[7];
 	int intBuffer;
 
-	float azimuth;
-	float elevation;
+	float azimuth = 0.0;
+	float elevation = 0.0;
 
-	for (i=0; datastr[i] != '\0'; i++) {
+	for (i=1; datastr[i] != '\0'; i++) {
 		switch (datastr[i]) {
-			case '{':
-				j = 0;
-				break;
-
 			case ',':
 				strBuffer[j] = '\0';
 				j = 0;	
