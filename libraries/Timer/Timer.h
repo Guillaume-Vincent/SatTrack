@@ -4,7 +4,7 @@
 #include "Arduino.h"
 #include "API.h"
 #include "Positions.h"
-#include "Satellites.h"
+#include "Target.h"
 
 
 extern PositionsList * posList;

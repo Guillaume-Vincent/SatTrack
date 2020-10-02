@@ -6,7 +6,7 @@
 #include "LiquidCrystalBoard.h"
 #include <LiquidCrystal.h>
 #include "Positions.h"
-#include "Satellites.h"
+#include "Target.h"
 
 
 extern PositionsList * posList;

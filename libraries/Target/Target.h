@@ -1,5 +1,5 @@
-#ifndef SATELLITES_H
-#define SATELLITES_H
+#ifndef TARGET_H
+#define TARGET_H
 
 
 #include "Constants.h"
