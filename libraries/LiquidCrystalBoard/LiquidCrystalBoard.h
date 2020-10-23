@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "API.h"
-#include "LiquidCrystalBoard.h"
+#include "Constants.h"
 #include <LiquidCrystal.h>
 #include "Positions.h"
 #include "Target.h"
@@ -13,13 +13,8 @@ extern PositionsList * posList;
 extern bool doMakeAPIRequest;
 extern const Target * currentTargetList;
 
-const uint8_t rs_pin = 8;
-const uint8_t bl_pin = 10;
-const uint8_t en_pin = 12;
-const uint8_t stop_pin = 4;
-const uint8_t btn_pin = A5;
-const int MENU_COUNT = 3;
 
+const int MENU_COUNT = 3;
 
 
 class LiquidCrystalBoard : public LiquidCrystal {
@@ -38,10 +33,11 @@ public:
 	void lcdBacklightOff();
 	void lcdClearLine(uint8_t line);
 	template <class dataType> void lcdPrintLine(uint8_t line, dataType data);
+	template <class dataType> void lcdPrintChar(uint8_t column, uint8_t line, dataType data);
 	void lcdPrintWelcome();
-	void lcdPrintESPTest();
-	void lcdPrintESPFailed();
-	void lcdPrintESPSuccess();
+	void lcdPrintWifiConnection();
+	void lcdPrintWifiIP(IPAddress localIP);
+	void lcdPrintWifiFailed();
 	void lcdPrintServoInit();
 	void lcdPrintServoDone();
 	void lcdPrintStepperInit();
@@ -58,6 +54,7 @@ public:
 	void lockButtons();
 	void unlockButtons();
 	void toggleButtonsLock();
+	void displayButtonPressed();
 	void checkButtons();
 	void buttonFunction(enum button button);
 
@@ -95,6 +92,12 @@ template <class dataType>
 void LiquidCrystalBoard::lcdPrintLine(uint8_t line, dataType data) {
 	lcdClearLine(line);
 	LiquidCrystal::print(data);
+}
+
+template <class dataType>
+void LiquidCrystalBoard::lcdPrintChar(uint8_t column, uint8_t line, dataType data) {
+	LiquidCrystal::setCursor(column, line);
+	LiquidCrystal::write(data);
 }
 
 

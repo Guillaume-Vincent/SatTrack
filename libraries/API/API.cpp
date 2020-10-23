@@ -1,6 +1,12 @@
 #include "API.h"
 
 
+void deserialize(String payload) {
+	char datastr[JSON_MAX_SIZE];
+	payload.toCharArray(datastr, JSON_MAX_SIZE);
+	deserialize(datastr);
+}
+
 void deserialize(char* datastr) {
 	int i;
 	int j = 0;

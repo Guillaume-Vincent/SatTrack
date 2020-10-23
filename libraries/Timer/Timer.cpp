@@ -2,33 +2,22 @@
 
 
 void timerSetup() {
-  // Reset Timer2 Control Reg A
-  TCCR2A = 0;
-
-  // Set to prescaler of 1024
-  TCCR2B |= (1 << CS12);
-  TCCR2B |= (1 << CS11);
-  TCCR2B |= (1 << CS10);
-
-  // Reset Timer2 and set compare value
-  TCNT2 = t2_load;
-  OCR2A = t2_comp;
-
-  // Enable Timer2 compare interrupt
-  TIMSK2 = (1 << OCIE2A);
-
-  // Enable global interrupts
-  sei();
+  timer = timerBegin(0, 80, true);
+  timerAttachInterrupt(timer, &onTimer, true);
+  timerAlarmWrite(timer, 1000000, true);
+  timerAlarmEnable(timer);
 }
 
-ISR(TIMER2_COMPA_vect) {
-  static int counter = 0;
-  TCNT2 = t2_load;
-
-  if (counter++ == 125) {
-    counter = 0;
-
-    if (!posList->isEmpty())
-      doGotoPosition = true;
+void IRAM_ATTR onTimer() {
+  if (!posList->isEmpty()) {
+    portENTER_CRITICAL_ISR(&timerMux);
+    doGotoPosition = true;
+    portEXIT_CRITICAL_ISR(&timerMux);
   }
+}
+
+void resetDoGotoPosition() {
+  portENTER_CRITICAL_ISR(&timerMux);
+  doGotoPosition = false;
+  portEXIT_CRITICAL_ISR(&timerMux);
 }

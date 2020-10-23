@@ -5,15 +5,15 @@ ServoMotor::ServoMotor()
 : Servo() {}
 
 void ServoMotor::init() {
-	Servo::attach(servo_pin, minPosPeriod, maxPosPeriod);
+	Servo::attach(servo_pin, Servo::CHANNEL_NOT_ATTACHED, -90.0, 90.0, minPosPeriod, maxPosPeriod);
 	lcb.lcdPrintServoInit();
 	
 	moveTo(0.0);
-	delay(1000);
+	delay(2000);
 	moveTo(-90.0);
-	delay(1000);
+	delay(2000);
 	moveTo(90.0);
-	delay(1000);
+	delay(2000);
 	moveTo(0.0);
 
 	lcb.lcdPrintServoDone();
@@ -21,6 +21,5 @@ void ServoMotor::init() {
 }
 
 void ServoMotor::moveTo(float angle) {
-	uint16_t period = angleToPeriod(angle, minPosPeriod, maxPosPeriod);
-	Servo::writeMicroseconds(period);
+	Servo::write(angle);
 }

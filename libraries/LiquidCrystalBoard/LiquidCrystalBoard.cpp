@@ -3,14 +3,14 @@
 
 // Constructor
 LiquidCrystalBoard::LiquidCrystalBoard(uint8_t rs,  uint8_t enable,
-	uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
-: LiquidCrystal(rs, enable, d0, d1, d2, d3) {}
+	uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
+: LiquidCrystal(rs, enable, d4, d5, d6, d7) {}
 
 
 // Generic methods
 void LiquidCrystalBoard::init() {
-	digitalWrite(bl_pin, LOW);
-	pinMode(stop_pin, INPUT_PULLUP);
+	digitalWrite(bl, LOW);
+	pinMode(stop, INPUT_PULLUP);
 	LiquidCrystal::begin(16, 2);
 	LiquidCrystal::clear();
 	
@@ -32,13 +32,13 @@ void LiquidCrystalBoard::start() {
 
 // LCD related methods
 void LiquidCrystalBoard::lcdBacklightOn() {
-	pinMode(bl_pin, INPUT);
+	pinMode(bl, INPUT);
 	LiquidCrystal::display();
 }
 
 void LiquidCrystalBoard::lcdBacklightOff() {
 	LiquidCrystal::noDisplay();
-	pinMode(bl_pin, OUTPUT);
+	pinMode(bl, OUTPUT);
 }
 
 void LiquidCrystalBoard::lcdClearLine(uint8_t line) {
@@ -52,17 +52,21 @@ void LiquidCrystalBoard::lcdPrintWelcome() {
 	lcdPrintLine(1, LCD_WELCOME1);
 }
 
-void LiquidCrystalBoard::lcdPrintESPTest() {
+void LiquidCrystalBoard::lcdPrintWifiConnection() {
 	lcdPrintLine(0, LCD_INITIALIZING);
-	lcdPrintLine(1, LCD_ESP8266);
+	lcdPrintLine(1, LCD_WIFI32);
 }
 
-void LiquidCrystalBoard::lcdPrintESPFailed() {
-	lcdPrintLine(1, LCD_WIFI_FAILED);
+void LiquidCrystalBoard::lcdPrintWifiIP(IPAddress localIP) {
+	lcdPrintLine(0, LCD_WIFICONNECT);
+	lcdClearLine(1);
+	LiquidCrystal::setCursor(1, 1);
+	LiquidCrystal::print(localIP);
 }
 
-void LiquidCrystalBoard::lcdPrintESPSuccess() {
-	lcdPrintLine(1, LCD_WIFI_SUCCESS);
+void LiquidCrystalBoard::lcdPrintWifiFailed() {
+	lcdPrintLine(0, LCD_WIFI_FAILED);
+	lcdPrintLine(1, LCD_WIFIRETRY);
 }
 
 void LiquidCrystalBoard::lcdPrintServoInit() {
@@ -93,6 +97,8 @@ void LiquidCrystalBoard::lcdPrintTargetData(uint8_t index) {
 	lcdPrintLine(0, currentTargetList[index].getName());
 	if ((id = currentTargetList[index].getID()) != 0)
 		lcdPrintLine(1, id);
+	else
+		lcdClearLine(1);
 }
 
 void LiquidCrystalBoard::lcdPrintPosData(float azimuth, float elevation) {
@@ -126,30 +132,60 @@ void LiquidCrystalBoard::toggleButtonsLock() {
 	buttonsLocked = !buttonsLocked;
 }
 
+void LiquidCrystalBoard::displayButtonPressed() {
+	switch (buttonPressed) {
+		case NONE:
+			Serial.println("NONE");
+			break;
+		case RIGHT:
+			Serial.println("RIGHT");
+			break;
+		case UP:
+			Serial.println("UP");
+			break;
+		case DOWN:
+			Serial.println("DOWN");
+			break;
+		case LEFT:
+			Serial.println("LEFT");
+			break;
+		case SELECT:
+			Serial.println("SELECT");
+			break;
+		case STOP:
+			Serial.println("STOP");
+			break;
+		default:
+			break;
+	}
+}
+
 void LiquidCrystalBoard::checkButtons() {
+	analogReadResolution(10);
 	if (!buttonsLocked) {
-		int btnVal = analogRead(btn_pin);
-		int stopVal = digitalRead(stop_pin);
+		int btnVal = analogRead(btn);
+		int stopVal = digitalRead(stop);
 
 		if (!stopVal and buttonPressed != STOP) {
 			buttonPressed = STOP;
 			buttonFunction(buttonPressed);
 		}
 		else if (buttonPressed == NONE) {
-			if (btnVal < 50)       buttonPressed = RIGHT;
-			else if (btnVal < 175) buttonPressed = UP;
-			else if (btnVal < 290) buttonPressed = DOWN;
-			else if (btnVal < 480) buttonPressed = LEFT;
-			else if (btnVal < 800) buttonPressed = SELECT;
+			if (btnVal < 20)       buttonPressed = RIGHT;
+			else if (btnVal < 100) buttonPressed = UP;
+			else if (btnVal < 270) buttonPressed = DOWN;
+			else if (btnVal < 450) buttonPressed = LEFT;
+			else if (btnVal < 750) buttonPressed = SELECT;
 			buttonFunction(buttonPressed);
 		}
-		else if (btnVal > 1000 && stopVal) {
+		else if (btnVal >= 750 && stopVal) {
 			buttonPressed = NONE;
 		}
 	}
 }
 
 void LiquidCrystalBoard::buttonFunction(enum button button) {
+	int counter = 0;
 	switch (button) {
 		case UP:
 			if (selectedMenu != SETUP) {
@@ -174,7 +210,11 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 				lcdPrintMenuData(menuPageNb);
 			}
 			else {
-				if (++lcdPageNb >= SAT_COUNT)
+				if (selectedMenu == BODIES) counter = BODY_COUNT;
+				else if (selectedMenu == SATELLITES) counter = SAT_COUNT;
+				else if (selectedMenu == STARS) counter = STAR_COUNT;
+
+				if (++lcdPageNb >= counter)
 					lcdPageNb = 0;
 				lcdPrintTargetData(lcdPageNb);
 			}
@@ -184,25 +224,39 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 			if (selectedMenu == SETUP) {
 				if (--menuPageNb >= MENU_COUNT)
 					menuPageNb = MENU_COUNT - 1;
-				lcdPrintTargetData(menuPageNb);
+				lcdPrintMenuData(menuPageNb);
 			}
 			else {
-				if (--lcdPageNb >= SAT_COUNT)
-					lcdPageNb = SAT_COUNT - 1;
+				if (selectedMenu == BODIES) counter = BODY_COUNT;
+				else if (selectedMenu == SATELLITES) counter = SAT_COUNT;
+				else if (selectedMenu == STARS) counter = STAR_COUNT;
+				
+				if (--lcdPageNb >= counter)
+					lcdPageNb = counter - 1;
 				lcdPrintTargetData(lcdPageNb);
 			}
 			break;
 
 		case SELECT:
-			lcdPageSelected = lcdPageNb;
+			if (selectedMenu == SETUP) {
+				selectedMenu = menuList[menuPageNb].getMenu();
+				currentTargetList = menuList[menuPageNb].getTargetList();
+				lcdPageNb = 0;
+				lcdPrintTargetData(lcdPageNb);
+			}
+			else {
+				lcdPageSelected = lcdPageNb;
 
-			posList->clearList();
-			doMakeAPIRequest = true;
+				posList->clearList();
+				doMakeAPIRequest = true;
+			}
 			break;
 
 		case STOP:
-			posList->clearList();
-			lcdPrintTargetData(lcdPageNb);
+			if (selectedMenu != SETUP) {
+				posList->clearList();
+				lcdPrintTargetData(lcdPageNb);
+			}
 			break;
 
 		default:

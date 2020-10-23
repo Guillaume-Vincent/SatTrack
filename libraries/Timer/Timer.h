@@ -2,24 +2,18 @@
 #define TIMER_H
 
 #include "Arduino.h"
-#include "API.h"
 #include "Positions.h"
-#include "Target.h"
 
 
 extern PositionsList * posList;
+extern hw_timer_t * timer;
+extern portMUX_TYPE timerMux;
 extern volatile bool doGotoPosition;
-extern volatile bool doUpdateRequest;
-extern volatile float nextAzimuth;
-extern volatile float nextElevation;
-
-
-const uint8_t t2_load = 0;
-const uint8_t t2_comp = 125;
 
 
 void timerSetup();
-ISR(TIMER2_COMPA_vect);
+void IRAM_ATTR onTimer();
+void resetDoGotoPosition();
 
 
 #endif
