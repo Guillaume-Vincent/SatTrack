@@ -11,9 +11,11 @@ extern LiquidCrystalBoard lcb;
 
 class StepperMotor {
 public:
-	StepperMotor(uint8_t step, uint8_t dir);
+	StepperMotor();
 
 	void init();
+	void enable();
+	void disable();
 	void pulseStep();
 	void oneStepCW();
 	void oneStepCCW();

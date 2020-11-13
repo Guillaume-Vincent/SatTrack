@@ -7,4 +7,5 @@
 
 int getLength(char* str);
 
+
 #endif

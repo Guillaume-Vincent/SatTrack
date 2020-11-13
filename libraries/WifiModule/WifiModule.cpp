@@ -1,28 +1,35 @@
 #include "WifiModule.h"
 
 
-void wifiSetup() {
-	lcb.lcdPrintWifiConnection();
-	WiFi.begin(HOTSPOT_SSID, HOTSPOT_PASS);
+void wifiSetup(bool quiet) {
+  if (!quiet) lcb.lcdPrintWifiConnection();
+  WiFi.begin(HOTSPOT_SSID, HOTSPOT_PASS);
 
-	uint8_t n = 5;
-	unsigned long t0 = millis();
-	while (WiFi.status() != WL_CONNECTED && millis() < t0 + 5000) {
-	    delay(500);
-	    lcb.lcdPrintChar(n++, 1, '.');
-  	}
-  	if (WiFi.status() == WL_CONNECTED) {
-  		lcb.lcdPrintWifiIP(WiFi.localIP());
-  		delay(2000);
-  	}
-  	else {
-  		lcb.lcdPrintWifiFailed();
-  		for (int i=3; i>0; i--) {
-  			lcb.lcdPrintChar(10, 1, i + 48);
-  			delay(1000);
-  		}
-  		wifiSetup();
-  	}
+  uint8_t n = 5;
+  unsigned long t0 = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() < t0 + 5000) {
+    if (!quiet) {
+      delay(500);
+      lcb.lcdPrintChar(n++, 1, '.');
+    }
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    if (!quiet) {
+      lcb.lcdPrintWifiIP(WiFi.localIP());
+      delay(2000);
+    }
+  }
+  else {
+    if (!quiet) {
+      lcb.lcdPrintWifiFailed();
+      for (int i=3; i>0; i--) {
+        lcb.lcdPrintChar(10, 1, i + 48);
+        delay(1000);
+      }
+    }
+    wifiSetup(quiet);
+  }
 }
 
 
@@ -58,6 +65,7 @@ String buildRequest() {
 
 
 void makeAPIRequest() {
+  wifiSetup(true);
   String request = buildRequest();
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -80,5 +88,14 @@ void makeAPIRequest() {
   }
   else {
     Serial.println("WiFi Disconnected");
+    lcb.resetLcd();
   }
+  wifiSleep();
+}
+
+void wifiSleep() {
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
+  esp_wifi_stop();
+  Serial.println("Wifi Going To Sleep");
 }

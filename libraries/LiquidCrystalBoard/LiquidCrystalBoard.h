@@ -14,9 +14,6 @@ extern bool doMakeAPIRequest;
 extern const Target * currentTargetList;
 
 
-const int MENU_COUNT = 3;
-
-
 class LiquidCrystalBoard : public LiquidCrystal {
 public:
 	// Constructor
@@ -32,6 +29,7 @@ public:
 	void lcdBacklightOn();
 	void lcdBacklightOff();
 	void lcdClearLine(uint8_t line);
+	void resetLcd();
 	template <class dataType> void lcdPrintLine(uint8_t line, dataType data);
 	template <class dataType> void lcdPrintChar(uint8_t column, uint8_t line, dataType data);
 	void lcdPrintWelcome();
@@ -51,6 +49,7 @@ public:
 
 	// Buttons related methods
 	enum button {UP, DOWN, RIGHT, LEFT, SELECT, STOP, NONE};
+	void countAdd(enum button button);
 	void lockButtons();
 	void unlockButtons();
 	void toggleButtonsLock();
@@ -85,6 +84,13 @@ private:
 	enum menu selectedMenu;
 	enum button buttonPressed;
 	bool buttonsLocked;
+
+	uint8_t countUp;
+	uint8_t countDown;
+	uint8_t countLeft;
+	uint8_t countStop;
+	uint8_t countRight;
+	uint8_t countSelect;
 };
 
 // Template method direct implementation

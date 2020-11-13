@@ -10,7 +10,6 @@ LiquidCrystalBoard::LiquidCrystalBoard(uint8_t rs,  uint8_t enable,
 // Generic methods
 void LiquidCrystalBoard::init() {
 	digitalWrite(bl, LOW);
-	pinMode(stop, INPUT_PULLUP);
 	LiquidCrystal::begin(16, 2);
 	LiquidCrystal::clear();
 	
@@ -19,6 +18,12 @@ void LiquidCrystalBoard::init() {
 	menuPageNb = 0;
 	buttonPressed = NONE;
 	selectedMenu = SETUP;
+
+	countUp = 0;
+	countDown = 0;
+	countLeft = 0;
+	countRight = 0;
+	countSelect = 0;
 
 	lcdPrintWelcome();
 	delay(2000);
@@ -45,6 +50,11 @@ void LiquidCrystalBoard::lcdClearLine(uint8_t line) {
 	LiquidCrystal::setCursor(0, line);
 	LiquidCrystal::print(LCD_VOID);
 	LiquidCrystal::setCursor(0, line);
+}
+
+void LiquidCrystalBoard::resetLcd() {
+	buttonFunction(STOP);
+	unlockButtons();
 }
 
 void LiquidCrystalBoard::lcdPrintWelcome() {
@@ -120,6 +130,15 @@ enum LiquidCrystalBoard::menu LiquidCrystalBoard::getSelectedMenu() {
 
 
 // Buttons related methods
+void LiquidCrystalBoard::countAdd(enum button button) {
+	countUp = (countUp + 1) * (button == UP);
+	countDown = (countDown + 1) * (button == DOWN);
+	countLeft = (countLeft + 1) * (button == LEFT);
+	countStop = (countStop + 1) * (button == STOP); 
+	countRight = (countRight + 1) * (button == RIGHT);
+	countSelect = (countSelect + 1) * (button == SELECT);
+}
+
 void LiquidCrystalBoard::lockButtons() {
 	buttonsLocked = true;
 }
@@ -134,9 +153,9 @@ void LiquidCrystalBoard::toggleButtonsLock() {
 
 void LiquidCrystalBoard::displayButtonPressed() {
 	switch (buttonPressed) {
-		case NONE:
-			Serial.println("NONE");
-			break;
+		// case NONE:
+		//  	Serial.println("NONE");
+		//  	break;
 		case RIGHT:
 			Serial.println("RIGHT");
 			break;
@@ -161,26 +180,59 @@ void LiquidCrystalBoard::displayButtonPressed() {
 }
 
 void LiquidCrystalBoard::checkButtons() {
-	analogReadResolution(10);
-	if (!buttonsLocked) {
-		int btnVal = analogRead(btn);
-		int stopVal = digitalRead(stop);
+	int btnVal = analogRead(btn);
 
-		if (!stopVal and buttonPressed != STOP) {
-			buttonPressed = STOP;
+	if (buttonPressed == NONE) {
+		if (btnVal < 341) {
+			if (countSelect >= DEBOUNCE_COUNTER) {
+				buttonPressed = SELECT;
+				countAdd(NONE);
+			}
+			else countAdd(SELECT);
+		}
+		else if (btnVal < 1024) {
+			if (countLeft >= DEBOUNCE_COUNTER) {
+				buttonPressed = LEFT;
+				countAdd(NONE);
+			}
+			else countAdd(LEFT);
+		}
+		else if (btnVal < 1706) {
+			if (countUp >= DEBOUNCE_COUNTER) {
+				buttonPressed = UP;
+				countAdd(NONE);
+			}
+			else countAdd(UP);
+		}
+		else if (btnVal < 2389) {
+			if (countDown >= DEBOUNCE_COUNTER) {
+				buttonPressed = DOWN;
+				countAdd(NONE);
+			}
+			else countAdd(DOWN);
+		}
+		else if (btnVal < 3071) {
+			if (countRight >= DEBOUNCE_COUNTER) {
+				buttonPressed = RIGHT;
+				countAdd(NONE);
+			}
+			else countAdd(RIGHT);
+		}
+		else if (btnVal < 3754) {
+			if (countStop >= DEBOUNCE_COUNTER) {
+				buttonPressed = STOP;
+				countAdd(NONE);
+			}
+			else countAdd(STOP);
+		}
+		
+		if (!buttonsLocked || buttonPressed == STOP) {
+			displayButtonPressed();
 			buttonFunction(buttonPressed);
 		}
-		else if (buttonPressed == NONE) {
-			if (btnVal < 20)       buttonPressed = RIGHT;
-			else if (btnVal < 100) buttonPressed = UP;
-			else if (btnVal < 270) buttonPressed = DOWN;
-			else if (btnVal < 450) buttonPressed = LEFT;
-			else if (btnVal < 750) buttonPressed = SELECT;
-			buttonFunction(buttonPressed);
-		}
-		else if (btnVal >= 750 && stopVal) {
-			buttonPressed = NONE;
-		}
+	}
+	else if (btnVal >= 3754) {
+		buttonPressed = NONE;
 	}
 }
 
@@ -245,6 +297,7 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 				lcdPrintTargetData(lcdPageNb);
 			}
 			else {
+				lockButtons();
 				lcdPageSelected = lcdPageNb;
 
 				posList->clearList();
@@ -253,6 +306,7 @@ void LiquidCrystalBoard::buttonFunction(enum button button) {
 			break;
 
 		case STOP:
+			unlockButtons();
 			if (selectedMenu != SETUP) {
 				posList->clearList();
 				lcdPrintTargetData(lcdPageNb);

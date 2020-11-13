@@ -1,11 +1,13 @@
 #include "StepperMotor.h"
 
 
-StepperMotor::StepperMotor(uint8_t step, uint8_t dir) {
+StepperMotor::StepperMotor() {
 	currentAngle = 0.0;
 
-	pinMode(step, OUTPUT);
-	pinMode(dir, OUTPUT);
+	pinMode(step_pin, OUTPUT);
+	pinMode(dir_pin, OUTPUT);
+	pinMode(en_pin, OUTPUT);
+	disable();
 }
 
 void StepperMotor::init() {
@@ -21,11 +23,21 @@ void StepperMotor::init() {
 	delay(2000);
 }
 
+void StepperMotor::enable() {
+	digitalWrite(en_pin, LOW);
+}
+
+void StepperMotor::disable() {
+	digitalWrite(en_pin, HIGH);
+}
+
 void StepperMotor::pulseStep() {
+	enable();
 	digitalWrite(step_pin, HIGH);
 	delayMicroseconds(pulse_delay);
 	digitalWrite(step_pin, LOW);
 	delayMicroseconds(pulse_delay);	
+	disable();
 }
 
 void StepperMotor::oneStepCW() {
