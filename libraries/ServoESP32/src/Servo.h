@@ -33,6 +33,7 @@
 #pragma once
 
 #include "Arduino.h"
+#include "tools.h"
 
 class Servo {
     // Default min/max pulse widths (in microseconds) and angles (in
@@ -126,7 +127,7 @@ public:
      *
      * @see Servo::attach()
      */
-    void write(int degrees);
+    void write(float degrees);
 
     /**
      * @brief Set the pulse width, in microseconds.
@@ -178,7 +179,13 @@ private:
     int _usToDuty(int us)    { return map(us, 0, TAU_USEC, 0, MAX_COMPARE); }
     int _dutyToUs(int duty)  { return map(duty, 0, MAX_COMPARE, 0, TAU_USEC); }
     int _usToAngle(int us)   { return map(us, _minPulseWidth, _maxPulseWidth, _minAngle, _maxAngle); }
-    int _angleToUs(int angle){ return map(angle, _minAngle, _maxAngle, _minPulseWidth, _maxPulseWidth); }
+    int _angleToUs(float angle) {
+        Serial.print("Angle : ");
+        Serial.println(angle);
+        Serial.print("MAP : ");
+        Serial.println(mapfloat(angle, (float)_minAngle, (float)_maxAngle, (float)_minPulseWidth, (float)_maxPulseWidth));
+        return mapfloat(angle, (float)_minAngle, (float)_maxAngle, (float)_minPulseWidth, (float)_maxPulseWidth);
+    }
 
     static int channel_next_free;
 

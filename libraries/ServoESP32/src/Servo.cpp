@@ -81,8 +81,8 @@ bool Servo::detach() {
     return true;
 }
 
-void Servo::write(int degrees) {
-    degrees = constrain(degrees, _minAngle, _maxAngle);
+void Servo::write(float degrees) { // int -> float
+    degrees = constrain(degrees, (float)_minAngle, (float)_maxAngle);
     writeMicroseconds(_angleToUs(degrees));
 }
 

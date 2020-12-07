@@ -12,7 +12,7 @@
 
 /* WIFIMODULE.H */
 // Request Settings
-const uint8_t NB_OF_POSITIONS = 20;
+const uint8_t NB_OF_POSITIONS = 60;
 
 // Wifi Settings
 // const char HOTSPOT_SSID[] PROGMEM = "SatTrackHotspot";
@@ -83,7 +83,7 @@ const char STARS_TEXT[] PROGMEM = 		"<    Stars     >";
 // LCD
 const char LCD_VOID[] PROGMEM = 		"                ";
 const char LCD_WELCOME0[] PROGMEM = 	" -- SatTrack -- ";
-const char LCD_WELCOME1[] PROGMEM = 	" v1.0 - Nov2020 ";
+const char LCD_WELCOME1[] PROGMEM = 	" v1.0 - Dec2020 ";
 const char LCD_INITIALIZING[] PROGMEM = " Initializing : ";
 const char LCD_WIFI32[] PROGMEM =		" Wifi           ";
 const char LCD_WIFICONNECT[] PROGMEM =	" Wifi Connected ";
