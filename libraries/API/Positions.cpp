@@ -16,7 +16,6 @@ bool Position::isNextNull() {
 	return next == NULL;
 }
 
-
 PositionsList::PositionsList()
 :first(NULL), last(NULL), nbPositions(0) {}
 

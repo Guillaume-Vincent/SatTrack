@@ -107,5 +107,4 @@ void LiquidCrystalBoard::lcdPrintChar(uint8_t column, uint8_t line, dataType dat
 }
 
 
-
 #endif

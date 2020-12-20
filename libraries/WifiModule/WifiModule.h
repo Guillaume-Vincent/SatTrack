@@ -1,7 +1,6 @@
 #ifndef WIFIMODULE_H
 #define WIFIMODULE_H
 
-
 #include "Arduino.h"
 #include "API.h"
 #include "Constants.h"
@@ -19,7 +18,6 @@ void wifiSetup(bool quiet);
 String buildRequest();
 void makeAPIRequest();
 void wifiSleep();
-
 
 
 #endif

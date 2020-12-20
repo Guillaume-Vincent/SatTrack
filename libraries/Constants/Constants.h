@@ -1,8 +1,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-
 #include "Arduino.h"
+#include "WifiCred.hsec"
 #ifdef ARDUINO_ARCH_AVR
 #include <avr/pgmspace.h>
 #else
@@ -13,16 +13,6 @@
 /* WIFIMODULE.H */
 // Request Settings
 const uint8_t NB_OF_POSITIONS = 60;
-
-// Wifi Settings
-// const char HOTSPOT_SSID[] PROGMEM = "SatTrackHotspot";
-// const char HOTSPOT_PASS[] PROGMEM = "SatTrackPwd";
-// const char HOTSPOT_SSID[] PROGMEM = "SFR_E3B0";
-// const char HOTSPOT_PASS[] PROGMEM = "du6rtgRaxxla";
-const char HOTSPOT_SSID[] PROGMEM = "NETGEAR35";
-const char HOTSPOT_PASS[] PROGMEM = "breezybreeze287";
-const char REMOTE_IP[] PROGMEM = "192.168.0.42";
-const char REMOTE_PORT[] PROGMEM = "5000";
 
 
 /* API.H */
@@ -111,5 +101,6 @@ const uint8_t en_stp = 27;
 // Ratio and speed
 const float gear_ratio = 0.1413;
 const uint16_t pulse_delay = 300;
+
 
 #endif
