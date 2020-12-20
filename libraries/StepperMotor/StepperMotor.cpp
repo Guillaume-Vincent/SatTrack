@@ -28,7 +28,7 @@ void StepperMotor::runTest() {
 
 	for (float a=5.0; a<365.0; a+=5) {
 		delay(1000);
-		lcb.printLine(0, a)
+		lcb.lcdPrintLine(0, a);
 		moveTo(a);
 	}
 	delay(2000);
