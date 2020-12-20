@@ -17,8 +17,7 @@ extern const Target * currentTargetList;
 class LiquidCrystalBoard : public LiquidCrystal {
 public:
 	// Constructor
-	LiquidCrystalBoard(uint8_t rs, uint8_t enable,
-		uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3);
+	LiquidCrystalBoard();
 	
 	// Generic methods
 	void init();

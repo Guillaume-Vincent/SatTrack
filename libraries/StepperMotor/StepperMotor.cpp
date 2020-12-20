@@ -4,9 +4,9 @@
 StepperMotor::StepperMotor() {
 	currentAngle = 0.0;
 
-	pinMode(step_pin, OUTPUT);
-	pinMode(dir_pin, OUTPUT);
-	pinMode(en_pin, OUTPUT);
+	pinMode(step_stp, OUTPUT);
+	pinMode(dir_stp, OUTPUT);
+	pinMode(en_stp, OUTPUT);
 	disable();
 }
 
@@ -23,41 +23,39 @@ void StepperMotor::init() {
 	delay(2000);
 }
 
-void StepperMotor::runTest() {
+void StepperMotor::test() {
+	uint16_t stepnb = 3600 * 8 / 2 / (gear_ratio * 1.8);
 	lcb.lcdPrintStepperTest();
-
-	for (float a=5.0; a<365.0; a+=5) {
-		delay(1000);
-		lcb.lcdPrintLine(0, a);
-		moveTo(a);
-	}
+	delay(2000);
+	stepCW(stepnb);
+	stepCW(stepnb);
 	delay(2000);
 }
 
 void StepperMotor::enable() {
-	digitalWrite(en_pin, LOW);
+	digitalWrite(en_stp, LOW);
 }
 
 void StepperMotor::disable() {
-	digitalWrite(en_pin, HIGH);
+	digitalWrite(en_stp, HIGH);
 }
 
 void StepperMotor::pulseStep() {
 	enable();
-	digitalWrite(step_pin, HIGH);
+	digitalWrite(step_stp, HIGH);
 	delayMicroseconds(pulse_delay);
-	digitalWrite(step_pin, LOW);
+	digitalWrite(step_stp, LOW);
 	delayMicroseconds(pulse_delay);	
 	disable();
 }
 
 void StepperMotor::oneStepCW() {
-	digitalWrite(dir_pin, HIGH);
+	digitalWrite(dir_stp, HIGH);
 	pulseStep();
 }
 
 void StepperMotor::oneStepCCW() {
-	digitalWrite(dir_pin, LOW);
+	digitalWrite(dir_stp, LOW);
 	pulseStep();
 }
 
@@ -95,4 +93,8 @@ void StepperMotor::moveTo(float angle) {
 		if (currentAngle < -180.0)
 		    currentAngle += 360.0;
 	}
+}
+
+float StepperMotor::getCurrentAngle() {
+	return currentAngle;
 }

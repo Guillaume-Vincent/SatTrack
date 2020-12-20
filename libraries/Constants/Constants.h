@@ -17,9 +17,11 @@ const uint8_t NB_OF_POSITIONS = 60;
 // Wifi Settings
 // const char HOTSPOT_SSID[] PROGMEM = "SatTrackHotspot";
 // const char HOTSPOT_PASS[] PROGMEM = "SatTrackPwd";
-const char HOTSPOT_SSID[] PROGMEM = "SFR_E3B0";
-const char HOTSPOT_PASS[] PROGMEM = "du6rtgRaxxla";
-const char REMOTE_IP[] PROGMEM = "192.168.1.49";
+// const char HOTSPOT_SSID[] PROGMEM = "SFR_E3B0";
+// const char HOTSPOT_PASS[] PROGMEM = "du6rtgRaxxla";
+const char HOTSPOT_SSID[] PROGMEM = "NETGEAR35";
+const char HOTSPOT_PASS[] PROGMEM = "breezybreeze287";
+const char REMOTE_IP[] PROGMEM = "192.168.0.42";
 const char REMOTE_PORT[] PROGMEM = "5000";
 
 
@@ -69,9 +71,9 @@ const uint8_t d4 = 26;
 const uint8_t d5 = 25;
 const uint8_t d6 = 33;
 const uint8_t d7 = 32;
-const uint8_t rs = 4;
-const uint8_t en = 16;
-const uint8_t bl = 17;
+const uint8_t rs_lcd = 4;
+const uint8_t en_lcd = 16;
+const uint8_t bl_lcd = 17;
 const uint8_t btn = 36;
 
 // Menus
@@ -102,12 +104,12 @@ const uint8_t DEBOUNCE_COUNTER = 50;
 
 /* STEPPERMOTOR.H */
 // Pins
-const uint8_t dir_pin = 18;
-const uint8_t step_pin = 19;
-const uint8_t en_pin = 27;
+const uint8_t dir_stp = 18;
+const uint8_t step_stp = 19;
+const uint8_t en_stp = 27;
 
 // Ratio and speed
-const float gear_ratio = 12.22 / 87.98;
-const uint16_t pulse_delay = 500;
+const float gear_ratio = 0.1413;
+const uint16_t pulse_delay = 300;
 
 #endif

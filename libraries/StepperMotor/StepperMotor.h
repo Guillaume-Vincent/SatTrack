@@ -14,7 +14,7 @@ public:
 	StepperMotor();
 
 	void init();
-	void runTest();
+	void test();
 	void enable();
 	void disable();
 	void pulseStep();
@@ -23,6 +23,7 @@ public:
 	void stepCW(uint16_t microstepNb);
 	void stepCCW(uint16_t microstepNb);
 	void moveTo(float angle);
+	float getCurrentAngle();
 
 private:
 	float currentAngle;

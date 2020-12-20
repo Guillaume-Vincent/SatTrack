@@ -16,10 +16,10 @@ bool doMakeAPIRequest = false;
 const Target * currentTargetList = NULL;
 
 
-LiquidCrystalBoard lcb(rs, en, d4, d5, d6, d7);
 PositionsList * posList = new PositionsList();
-StepperMotor stepper;
+LiquidCrystalBoard lcb;
 ServoMotor servo;
+StepperMotor stepper;
 hw_timer_t * timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -33,8 +33,9 @@ void setup() {
   wifiSetup(false);
   wifiSleep();
 
-  servo.init();
-  stepper.init();
+  // servo.init();
+  // stepper.init();
+  stepper.test();
 
   lcb.start();
 }

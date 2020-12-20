@@ -2,14 +2,13 @@
 
 
 // Constructor
-LiquidCrystalBoard::LiquidCrystalBoard(uint8_t rs,  uint8_t enable,
-	uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
-: LiquidCrystal(rs, enable, d4, d5, d6, d7) {}
+LiquidCrystalBoard::LiquidCrystalBoard()
+: LiquidCrystal(rs_lcd, en_lcd, d4, d5, d6, d7) {}
 
 
 // Generic methods
 void LiquidCrystalBoard::init() {
-	digitalWrite(bl, LOW);
+	digitalWrite(bl_lcd, LOW);
 	LiquidCrystal::begin(16, 2);
 	LiquidCrystal::clear();
 	
@@ -37,13 +36,13 @@ void LiquidCrystalBoard::start() {
 
 // LCD related methods
 void LiquidCrystalBoard::lcdBacklightOn() {
-	pinMode(bl, INPUT);
+	pinMode(bl_lcd, INPUT);
 	LiquidCrystal::display();
 }
 
 void LiquidCrystalBoard::lcdBacklightOff() {
 	LiquidCrystal::noDisplay();
-	pinMode(bl, OUTPUT);
+	pinMode(bl_lcd, OUTPUT);
 }
 
 void LiquidCrystalBoard::lcdClearLine(uint8_t line) {
