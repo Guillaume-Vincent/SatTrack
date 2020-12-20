@@ -45,7 +45,7 @@ bool ESPWifi::joinAccessPoint() {
 }
 
 bool ESPWifi::establishConnection() {
-	Serial.print(ESP_CONN);
+	// Serial.print(ESP_CONN);
 	bool connected = false;
 	String data = "";
 
@@ -61,11 +61,11 @@ bool ESPWifi::establishConnection() {
 		}
 	}
 	if (data == ok_str && connected) {
-		Serial.println(ESP_DONE);
+		// Serial.println(ESP_DONE);
 		return true;
 	}
 	else {
-		Serial.println(ESP_FAILED);
+		// Serial.println(ESP_FAILED);
 		return false;
 	}
 }

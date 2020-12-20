@@ -93,6 +93,11 @@ void LiquidCrystalBoard::lcdPrintStepperInit() {
 	lcdPrintLine(1, LCD_STEPPER);
 }
 
+void LiquidCrystalBoard::lcdPrintStepperTest() {
+	lcdPrintLine(0, LCD_STEPPER_TEST);
+	lcdClearLine(1);
+}
+
 void LiquidCrystalBoard::lcdPrintStepperDone() {
 	lcdPrintLine(1, LCD_STEPPER_DONE);
 }
@@ -227,7 +232,7 @@ void LiquidCrystalBoard::checkButtons() {
 		}
 		
 		if (!buttonsLocked || buttonPressed == STOP) {
-			displayButtonPressed();
+			// displayButtonPressed();
 			buttonFunction(buttonPressed);
 		}
 	}

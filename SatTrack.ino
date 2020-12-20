@@ -33,6 +33,7 @@ void setup() {
   ESP8266.init();
   servo.init();
   stepper.init();
+  stepper.runTest();
 
   lcb.start();
 }

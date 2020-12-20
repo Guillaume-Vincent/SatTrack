@@ -14,6 +14,7 @@ public:
 	StepperMotor();
 
 	void init();
+	void runTest();
 	void enable();
 	void disable();
 	void pulseStep();

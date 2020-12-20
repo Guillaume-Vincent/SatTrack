@@ -39,6 +39,7 @@ public:
 	void lcdPrintServoInit();
 	void lcdPrintServoDone();
 	void lcdPrintStepperInit();
+	void lcdPrintStepperTest();
 	void lcdPrintStepperDone();
 	void lcdPrintMenuData(uint8_t index);
 	void lcdPrintTargetData(uint8_t index);

@@ -78,16 +78,16 @@ void makeAPIRequest() {
       deserialize(payload);
     }
     else {
-      Serial.print("Error code: ");
-      Serial.println(httpResponseCode);
-      Serial.print("Request : ");
-      Serial.println(request);
+      // Serial.print("Error code: ");
+      // Serial.println(httpResponseCode);
+      // Serial.print("Request : ");
+      // Serial.println(request);
     }
 
     http.end();
   }
   else {
-    Serial.println("WiFi Disconnected");
+    // Serial.println("WiFi Disconnected");
     lcb.resetLcd();
   }
   wifiSleep();
@@ -97,5 +97,5 @@ void wifiSleep() {
   WiFi.disconnect(true);
   WiFi.mode(WIFI_OFF);
   esp_wifi_stop();
-  Serial.println("Wifi Going To Sleep");
+  // Serial.println("Wifi Going To Sleep");
 }

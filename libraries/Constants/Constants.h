@@ -94,6 +94,7 @@ const char LCD_SERVO[] PROGMEM = 		" Servo - ...    ";
 const char LCD_SERVO_DONE[] PROGMEM = 	" Servo - DONE   ";
 const char LCD_STEPPER[] PROGMEM = 		" Stepper - ...  ";
 const char LCD_STEPPER_DONE[] PROGMEM = " Stepper - DONE ";
+const char LCD_STEPPER_TEST[] PROGMEM = " Stepper - TEST ";
 
 //Buttons
 const uint8_t DEBOUNCE_COUNTER = 50;
