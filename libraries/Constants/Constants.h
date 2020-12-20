@@ -2,7 +2,7 @@
 #define CONSTANTS_H
 
 #include "Arduino.h"
-#include "WifiCred.hsec"
+#include "WifiCred.hsec" // CREATE A "WifiCred.hsec" file //
 #ifdef ARDUINO_ARCH_AVR
 #include <avr/pgmspace.h>
 #else
@@ -14,6 +14,12 @@
 // Request Settings
 const uint8_t NB_OF_POSITIONS = 60;
 
+// Wifi Settings
+// CREATE A "WifiCred.hsec" file with where you define the following variables :
+//  const char HOTSPOT_SSID[] PROGMEM = "WIFI_SSID"; 
+//  const char HOTSPOT_PASS[] PROGMEM = "WIFI_PASSWORD";
+//  const char REMOTE_IP[] PROGMEM = "192.168.X.X"; // server IP
+//  const char REMOTE_PORT[] PROGMEM = "5000"; // server port
 
 /* API.H */
 // Observator Location
