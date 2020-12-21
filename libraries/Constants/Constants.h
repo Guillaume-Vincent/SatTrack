@@ -23,12 +23,12 @@ const uint8_t NB_OF_POSITIONS = 60;
 
 /* API.H */
 // Observator Location
-// const char OBS_LAT[] PROGMEM  = "48.755"; // Antony Lat
-// const char OBS_LONG[] PROGMEM = "2.283";  // Antony Long
-// const uint16_t OBS_ALT = 88;              // Antony Alt
-const char OBS_LAT[] PROGMEM  = "43.573"; // Toulouse Lat
-const char OBS_LONG[] PROGMEM = "1.469";  // Toulouse Long
-const uint16_t OBS_ALT = 151;             // Toulouse Alt
+const char OBS_LAT[] PROGMEM  = "48.755"; // Antony Lat
+const char OBS_LONG[] PROGMEM = "2.283";  // Antony Long
+const uint16_t OBS_ALT = 88;              // Antony Alt
+// const char OBS_LAT[] PROGMEM  = "43.573"; // Toulouse Lat
+// const char OBS_LONG[] PROGMEM = "1.469";  // Toulouse Long
+// const uint16_t OBS_ALT = 151;             // Toulouse Alt
 const uint16_t JSON_MAX_SIZE = 13 + 14 * NB_OF_POSITIONS + 1;
 
 
@@ -106,7 +106,7 @@ const uint8_t en_stp = 27;
 
 // Ratio and speed
 const float gear_ratio = 0.1413;
-const uint16_t pulse_delay = 300;
+const uint16_t pulse_delay = 400;
 
 
 #endif

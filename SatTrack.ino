@@ -33,9 +33,9 @@ void setup() {
   wifiSetup(false);
   wifiSleep();
 
-  // servo.init();
-  // stepper.init();
-  stepper.test();
+  servo.init();
+  stepper.init();
+  // stepper.test();
 
   lcb.start();
 }

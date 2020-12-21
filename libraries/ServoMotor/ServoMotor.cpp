@@ -10,10 +10,22 @@ void ServoMotor::init() {
 	
 	moveTo(0.0);
 	delay(2000);
-	moveTo(-90.0);
+
+	for (float angle=0.0; angle<95.0; angle+=30.0) {
+		moveTo(angle);
+		delay(500);
+	}
+
+	delay(1500);
+	moveTo(0.0);
 	delay(2000);
-	moveTo(90.0);
-	delay(2000);
+
+	for (float angle=0.0; angle>-95.0; angle-=30.0) {
+		moveTo(angle);
+		delay(500);
+	}
+
+	delay(1500);
 	moveTo(0.0);
 
 	lcb.lcdPrintServoDone();
